@@ -9,8 +9,11 @@ namespace Tennis
         private string player1Name;
         private string player2Name;
 
+        static private string[] point_desc = { "Love", "Fifteen", "Thirty", "Forty" };
+
         public TennisGame(string player1Name, string player2Name)
         {
+            //assign players
             this.player1Name = player1Name;
             this.player2Name = player2Name;
         }
@@ -18,77 +21,58 @@ namespace Tennis
         public void WonPoint(string playerName)
         {
             /*
-            if (playerName == "player1")
-                m_score1 += 1;
-            else
-                m_score2 += 1;
+
+            TO DO: Check if game is over before assign more points
+             
             */
+
 
             //abstract the player name
             if (this.player1Name == playerName)
+                //point player 1
                 m_score1 += 1;
             else if (this.player2Name == playerName)
+                //point player 2
                 m_score2 += 1;
             else 
                 //throw error invalid player
-                throw new Exception("Invalid Player Won Point");
+                throw new Exception("Invalid playerName argument to WonPoint()");
 
         }
 
         public string GetScore()
         {
             string score = "";
-            var tempScore = 0;
-            if (m_score1 == m_score2)
-            {
-                switch (m_score1)
-                {
-                    case 0:
-                        score = "Love-All";
-                        break;
-                    case 1:
-                        score = "Fifteen-All";
-                        break;
-                    case 2:
-                        score = "Thirty-All";
-                        break;
-                    default:
-                        score = "Deuce";
-                        break;
 
-                }
-            }
-            else if (m_score1 >= 4 || m_score2 >= 4)
+            //Not a Tie
+            if (m_score1 != m_score2)
             {
-                var minusResult = m_score1 - m_score2;
-                if (minusResult == 1) score = "Advantage player1";
-                else if (minusResult == -1) score = "Advantage player2";
-                else if (minusResult >= 2) score = "Win for player1";
-                else score = "Win for player2";
+
+                //check for win and in array bounds
+                if ((m_score1 >= 4 || m_score2 >= 4) && Math.Abs(m_score1 - m_score2) >= 2)
+                {
+                    score = m_score1 > m_score2 ? "Win for " + player1Name : "Win for " + player2Name;
+                }
+                //check advantage
+                else if ((m_score1 + m_score2 >= 6) && Math.Abs(m_score1 - m_score2) == 1)
+                {
+                    score = m_score1 > m_score2 ? "Advantage " + player1Name : "Advantage " + player2Name;
+                }
+                //map score
+                else
+                {
+                    score = point_desc[m_score1] + "-" + point_desc[m_score2];
+                }
+
             }
+            //Tie Score
             else
             {
-                for (var i = 1; i < 3; i++)
-                {
-                    if (i == 1) tempScore = m_score1;
-                    else { score += "-"; tempScore = m_score2; }
-                    switch (tempScore)
-                    {
-                        case 0:
-                            score += "Love";
-                            break;
-                        case 1:
-                            score += "Fifteen";
-                            break;
-                        case 2:
-                            score += "Thirty";
-                            break;
-                        case 3:
-                            score += "Forty";
-                            break;
-                    }
-                }
+                //Deuce or All
+                score = (m_score1 + m_score2 >= 6) ? "Deuce" : point_desc[m_score1] + "-All";
+
             }
+
             return score;
         }
     }
