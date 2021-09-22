@@ -1,3 +1,5 @@
+using System;
+
 namespace Tennis
 {
     class TennisGame : ITennisGame
@@ -15,10 +17,22 @@ namespace Tennis
 
         public void WonPoint(string playerName)
         {
+            /*
             if (playerName == "player1")
                 m_score1 += 1;
             else
                 m_score2 += 1;
+            */
+
+            //abstract the player name
+            if (this.player1Name == playerName)
+                m_score1 += 1;
+            else if (this.player2Name == playerName)
+                m_score2 += 1;
+            else 
+                //throw error invalid player
+                throw new Exception("Invalid Player Won Point");
+
         }
 
         public string GetScore()
